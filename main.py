@@ -63,8 +63,9 @@ def draw_init_screen():
     
 
 def scanBus(can, timeout_ms, id=None):
-    #can.clear_tx_queue()
+    can.clear_tx_queue()
     can.clear_rx_queue()
+    #can.send([1,2,3,4,5,6,8], 0x77)
     if id:
         can.setfilter(0, CAN.FILTER_ADDRESS, [id, 0])
     #can.send([1,2,3,4,5,6,8], id)
@@ -105,7 +106,9 @@ while True:
                   # baudrate=CAN.BAUDRATE_500k,
                   baudrate=bus_speeds[speed_index],
                   # rx2/tx2
-                  tx_io=17, rx_io=16, auto_restart=False)
+                  #tx_io=17, rx_io=16, auto_restart=False)
+                  # esplay SDA=IO21 = tx, SCL=IO22 = rx
+                  tx_io=21, rx_io=22, auto_restart=False)
         bus_valid=scanBus(can, 1000)
 
     else:
