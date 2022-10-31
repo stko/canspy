@@ -7,5 +7,5 @@ That is what CAN-Spy is for
 In the samples folder there are different implementations, like for the ESPlay Micro (which is out of the ODroid Go family)
 
 ## Community
-Whenever you do some improvement or even an own design for another board, please send me a pull request to add it in here
+Whenever you do some improvements or even an own design for another board, please send me a pull request to add it in here
 
