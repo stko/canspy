@@ -1,7 +1,7 @@
 from esp32 import CAN
 from time import sleep_ms
-
-
+from display import Display
+from formatter import Formatter
 
 import esp
 esp.osdebug(None)
@@ -10,9 +10,10 @@ import gc
 gc.collect()
 
 
-telegrams=[]
+telegrams={}
 
 bus_valid = False
+last_bus_valid=False
 bus_speeds = [125,250,500]
 # reusable buffer to avoid head usage
 buf = bytearray(8)
@@ -32,7 +33,7 @@ def scanBus(can, timeout_ms, id=None):
             r=can.recv()
             id=r[0]
             data=r[3]
-            telegrams.append({"id":id , "data":data})
+            telegrams[id]= data
         return True
     else:
         return False
@@ -43,13 +44,17 @@ def scanBus(can, timeout_ms, id=None):
 
 can=None
 nr_of_rows=10
-last_bus_valid=None
-speed_index=len(bus_speeds)
+speed_index=len(bus_speeds)-1
+disp=Display()
+formatter=Formatter("Bus {}kb".format(bus_speeds[speed_index]))
+print("geht 1")
+
 #while True:
-for i in range(10):
+for i in range(5):
     if bus_valid == False:
         if last_bus_valid != bus_valid:
             telegrams.clear()
+            disp.show_splash()
         last_bus_valid= bus_valid
         speed_index +=1
         if speed_index>=len(bus_speeds):
@@ -77,15 +82,11 @@ for i in range(10):
             print("Bus found {}kb".format(bus_speeds[speed_index]))
         last_bus_valid= bus_valid
         bus_valid=scanBus(can, 1000)
+        formatter.new_content(telegrams)
+        disp.show(formatter,"Bus {} kB".format(bus_speeds[speed_index]))
     if bus_valid:
         print("Bus {} kB ok".format(bus_speeds[speed_index]))
-        telegram_lines=len(telegrams)
-        # to avoid memory run out, we limit the number of stored telegrams
-
-        telegrams=telegrams[-10:]
-        for line_count in range (min(nr_of_rows,len(telegrams))):
-            id = telegrams[line_count]["id"]
-            data = telegrams[line_count]["data"]
+        for id, data in telegrams.items():
             print("{:04x}".format(id).upper() + " " + "".join(["{:02x}".format(x) for x in data[:6]]).upper())
 
 can.info()                  # get information about the controller’s error states and TX and RX buffers

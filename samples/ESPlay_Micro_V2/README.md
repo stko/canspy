@@ -26,9 +26,9 @@ Get a copy of the latest driver
     git clone --depth=1 https://github.com/peterhinch/micropython-nano-gui
     
 
-Delete all unused files and dirs, keep just the driver and the gui directory (and the images for the demos)
+Delete all unused files and dirs, keep just the driver and the gui directory
 
-    rm -vr !("drivers"|"gui"|"images")
+    rm -vr !("drivers"|"gui")
     cd drivers
     rm -vr !("ili93xx"|"boolpalette.py")
     cd ..
@@ -58,7 +58,7 @@ transfer the gui files - here the board name was shown as `pyboard` in the `boar
 then change the directory to where this CANSpy repository is located and copy the CANSpy files
 
     cp main.py /pyboard
-    
+
 
 enter the `repl`
 
