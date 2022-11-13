@@ -50,7 +50,7 @@ formatter=Formatter("Bus {}kb".format(bus_speeds[speed_index]))
 print("geht 1")
 
 #while True:
-for i in range(5):
+for i in range(20):
     if bus_valid == False:
         if last_bus_valid != bus_valid:
             telegrams.clear()

@@ -42,7 +42,7 @@ class Formatter(dict):
         return "bla"
 
     def get_module(self,id):
-        return id
+        return "{:04x}".format(id).upper()
 
     def new_content(self,telegrams):
         ids=list(telegrams.keys())
@@ -72,5 +72,5 @@ class Formatter(dict):
                 module_name=self.get_module(id)
                 if module_name in self: # the module is already in the list
                     continue 
-                self[module_name]=FormatTelegram(self.internal_hash[id].new,"")
+                self[module_name]=FormatTelegram(self.internal_hash[id].new,module_name)
 

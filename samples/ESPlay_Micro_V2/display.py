@@ -57,19 +57,54 @@ class Display:
         ssd.show()
 
     def clear(self):
-        self.cursor_pos = 0
+        self.cursor_list_pos = 0
+        self.cursor_row_pos = 0
         self.last_id = None
-        self.last_content = None
         for label in self.labels:
             label.value("")
 
-    def show(self, content, title):
+    def get_cursor_pos(self,ids_list):
+        cursor_list_pos=0
+        while cursor_list_pos < len(ids_list) and not self.last_id==ids_list[cursor_list_pos]: # looking at which position in the list we are
+            cursor_list_pos+=1
+        return cursor_list_pos
 
+    def show(self, content, title):
+        if not content:
+            self.clear()
+            self.labels[0].value(title)
+            return
         self.labels[0].value(title)
-        if not self.last_content:  # this is the first call
-            pass
-        for title, format_telegram in content.items():
-            print(title, format_telegram.text)
+        ids_list=list(content) # makes a indexable list out of the content title keys
+        if not self.last_id:  # this is the first call
+            self.last_id=ids_list[0]
+        cursor_list_pos=self.get_cursor_pos(ids_list)
+
+        '''
+        now we can fill the display. Luckely a content list can only get longer from one loop to the next,
+        but it can never become shortee (found ids won't dissapear again). This saves us a lot of calculation
+        for the display update
+        '''
+        start_of_display_items=cursor_list_pos-self.cursor_row_pos
+        for ids_list_index in range(start_of_display_items,min(start_of_display_items + self.nr_of_rows,len(ids_list))):
+            label_index=ids_list_index- start_of_display_items+1
+            content_index=ids_list[ids_list_index]
+            format_telegram=content[content_index]
+            print("label_index:",label_index,"content_index",content_index,"text",format_telegram.text)
+            if label_index-start_of_display_items==self.cursor_row_pos:
+                self.labels[label_index].value(format_telegram.text,fgcolor=WHITE,bgcolor=RED)
+            else:
+                if format_telegram.new:
+                    self.labels[label_index].value(format_telegram.text,fgcolor=BLACK,bgcolor=GREEN)
+                    format_telegram.new=False
+                else:
+                    self.labels[label_index].value(format_telegram.text)
+
+
+        print("cursor pos",cursor_list_pos, self.last_id)
+        for id  in ids_list:
+            print(id, content[id].text)
+        # 
         refresh(ssd)
 
     def show_splash(self):
