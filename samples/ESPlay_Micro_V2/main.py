@@ -1,7 +1,11 @@
 from esp32 import CAN
 from time import sleep_ms
+
 from display import Display
 from formatter import Formatter
+
+from pcbbuttons import KeyPad
+
 
 import esp
 esp.osdebug(None)
@@ -15,6 +19,8 @@ telegrams={}
 bus_valid = False
 last_bus_valid=False
 bus_speeds = [125,250,500]
+
+
 # reusable buffer to avoid head usage
 buf = bytearray(8)
 lst = [0, 0, 0, memoryview(buf)]
@@ -39,7 +45,6 @@ def scanBus(can, timeout_ms, id=None):
         return False
 
 
-
 # some info about the used can implementation https://github.com/micropython/micropython/pull/7381#issuecomment-931697807
 
 can=None
@@ -48,9 +53,10 @@ speed_index=len(bus_speeds)-1
 disp=Display()
 formatter=Formatter("Bus {}kb".format(bus_speeds[speed_index]))
 print("geht 1")
-
+keypad=KeyPad(5)
 #while True:
 for i in range(20):
+    keypad.refresh()
     if bus_valid == False:
         if last_bus_valid != bus_valid:
             telegrams.clear()
