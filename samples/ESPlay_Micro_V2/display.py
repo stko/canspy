@@ -20,7 +20,7 @@ from micropython import const
 class Display:
     def __init__(self):
         # a few constants
-        self.row_height = const(37)
+        self.row_height = const(38)
         # on the ESPlay the leftmost pixels are hidden under the front plate :-(
         self.left_padding = const(5)
         self.top_padding = const(0)
@@ -69,16 +69,33 @@ class Display:
             cursor_list_pos+=1
         return cursor_list_pos
 
-    def show(self, content, title):
+    def show(self, content, title, cursormove=0):
         if not content:
             self.clear()
             self.labels[0].value(title)
             return
         self.labels[0].value(title)
-        ids_list=list(content) # makes a indexable list out of the content title keys
+        ids_list=sorted(list(content)) # makes a indexable list out of the content title keys
         if not self.last_id:  # this is the first call
             self.last_id=ids_list[0]
         cursor_list_pos=self.get_cursor_pos(ids_list)
+
+        if cursormove != 0:
+            new_cursor_list_pos=cursor_list_pos + cursormove
+            if new_cursor_list_pos>-1 and new_cursor_list_pos<len(ids_list):
+                cursor_list_pos=new_cursor_list_pos
+                self.last_id=ids_list[cursor_list_pos]
+                self.cursor_row_pos+=cursormove
+                self.cursor_row_pos=min(self.cursor_row_pos,self.nr_of_rows-1)
+                self.cursor_row_pos=max(self.cursor_row_pos,0)
+            elif new_cursor_list_pos<0: #jump to end if list
+                cursor_list_pos=len(ids_list)-1
+                self.last_id=ids_list[cursor_list_pos]
+                self.cursor_row_pos=self.nr_of_rows-1
+            else: #jump to beginning of list
+                cursor_list_pos=0
+                self.last_id=ids_list[cursor_list_pos]
+                self.cursor_row_pos=0
 
         '''
         now we can fill the display. Luckely a content list can only get longer from one loop to the next,
@@ -90,8 +107,9 @@ class Display:
             label_index=ids_list_index- start_of_display_items+1
             content_index=ids_list[ids_list_index]
             format_telegram=content[content_index]
+            print("label_index-start_of_display_items",label_index-start_of_display_items,"self.cursor_row_pos",self.cursor_row_pos)
             print("label_index:",label_index,"content_index",content_index,"text",format_telegram.text)
-            if label_index-start_of_display_items==self.cursor_row_pos:
+            if label_index==self.cursor_row_pos + 1: # +1 is needed because label index starts at 1
                 self.labels[label_index].value(format_telegram.text,fgcolor=WHITE,bgcolor=RED)
             else:
                 if format_telegram.new:
@@ -100,7 +118,9 @@ class Display:
                 else:
                     self.labels[label_index].value(format_telegram.text)
 
-
+        print("ids_list_index",ids_list_index)
+        for clear_label in range(ids_list_index,self.nr_of_rows):
+            self.labels[clear_label].value("")
         print("cursor pos",cursor_list_pos, self.last_id)
         for id  in ids_list:
             print(id, content[id].text)

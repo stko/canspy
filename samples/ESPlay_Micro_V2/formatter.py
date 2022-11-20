@@ -25,6 +25,17 @@ class Formatter(dict):
         self.header=bus_name
         self.internal_hash={}
         self.ignored_ids=[]
+        ## just for test
+        self.known_messages={
+            "Modul A1" : {
+                0x20B : "bla",
+                0x0406: "bla"
+            },
+            "Modul A88" : {
+                0x068F : "bla"
+            }
+        }
+
 
 
 
@@ -42,6 +53,10 @@ class Formatter(dict):
         return "bla"
 
     def get_module(self,id):
+        for module_name,module_telegrams in self.known_messages.items():
+            for telegram_id in module_telegrams:
+                if telegram_id==id:
+                    return module_name
         return "{:04x}".format(id).upper()
 
     def new_content(self,telegrams):

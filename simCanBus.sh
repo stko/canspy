@@ -14,4 +14,5 @@ sudo ip link set can0 type can bitrate $BAUDRATE
 sudo ip link set up can0
 sudo ip link set can1 type can bitrate $BAUDRATE
 sudo ip link set up can1
-cangen -v can0
+#cangen -v can0
+canplayer -v -l i -I  playback.log

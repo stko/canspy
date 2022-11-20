@@ -48,7 +48,6 @@ class KeyHandle:
 
     def refresh(self, debounce):
         actual_state = self.get_pin_state()
-        print(actual_state)
         if not actual_state and self.debounce > 0:
             self.debounce -= 1
         if actual_state and self.debounce < 2 * debounce:

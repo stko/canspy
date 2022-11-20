@@ -51,11 +51,10 @@ can=None
 nr_of_rows=10
 speed_index=len(bus_speeds)-1
 disp=Display()
-formatter=Formatter("Bus {}kb".format(bus_speeds[speed_index]))
-print("geht 1")
-keypad=KeyPad(5)
-#while True:
-for i in range(20):
+formatter=Formatter("CANSpy auf {}kb".format(bus_speeds[speed_index]))
+keypad=KeyPad(1)
+while True:
+#for i in range(20):
     keypad.refresh()
     if bus_valid == False:
         if last_bus_valid != bus_valid:
@@ -81,20 +80,26 @@ for i in range(20):
             rx=22
         )
 
-        bus_valid=scanBus(can, 1000)
+        bus_valid=scanBus(can, 300)
 
     else:
         if last_bus_valid != bus_valid:
             print("Bus found {}kb".format(bus_speeds[speed_index]))
         last_bus_valid= bus_valid
-        bus_valid=scanBus(can, 1000)
+        bus_valid=scanBus(can, 200)
         formatter.new_content(telegrams)
-        disp.show(formatter,"Bus {} kB".format(bus_speeds[speed_index]))
-    if bus_valid:
+        if keypad[KeyPad.BTN_MENU].key_down:
+            print("Button Menu")
+        if keypad[KeyPad.BTN_UP].key_down:
+            print("Button up")
+            disp.show(formatter,"CANSpy auf {} kB".format(bus_speeds[speed_index]),1)
+        else:
+            disp.show(formatter,"CANSpy auf {} kB".format(bus_speeds[speed_index]))
+    '''if bus_valid:
         print("Bus {} kB ok".format(bus_speeds[speed_index]))
         for id, data in telegrams.items():
             print("{:04x}".format(id).upper() + " " + "".join(["{:02x}".format(x) for x in data[:6]]).upper())
-
+    '''
 can.info()                  # get information about the controller’s error states and TX and RX buffers
 can.deinit()                # turn off the can bus
 can.clear_rx_queue()        # clear messages in the FIFO
