@@ -75,9 +75,9 @@ while True:
             # because of a bug in the espressif library the actual baudrate need to multiplied by 2
             baudrate=250000,
             #baudrate=bus_speeds[speed_index] * 1000,
-            # esplay SDA=IO21 = tx, SCL=IO22 = rx
-            tx=21,
-            rx=22
+            # esplay SD_CLK=IO14 = rx, SD_CMD=IO15 = tx
+            tx=15,
+            rx=14
         )
 
         bus_valid=scanBus(can, 300)
