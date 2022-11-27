@@ -40,10 +40,13 @@ class Display:
             self.labels.append(Label(normal_writer,  self.top_padding + (
                 i+1) * self.row_height, self.left_padding, ssd.width - self.left_padding-2))
         #self.normalwriter.set_clip(True, True, False)
-        self.clear()
+        self.clear("")
         # refresh(ssd)  # Initialise and clear display.
         ssd.fill(255)
-        return
+
+        # uncomment the return to avoid the splash screen
+        # #return
+
         # make sure the image has the right size !
         # it can be made with
         #    ffmpeg -loglevel error -i my_splash_image -f rawvideo -pix_fmt rgb565 "splash.rgb565"
@@ -56,78 +59,96 @@ class Display:
                 ssd.pixel(y, x, c)
         ssd.show()
 
-    def clear(self):
+    def clear(self, title):
         self.cursor_list_pos = 0
         self.cursor_row_pos = 0
         self.last_id = None
         for label in self.labels:
             label.value("")
+        self.labels[0].value(title)
 
-    def get_cursor_pos(self,ids_list):
-        cursor_list_pos=0
-        while cursor_list_pos < len(ids_list) and not self.last_id==ids_list[cursor_list_pos]: # looking at which position in the list we are
-            cursor_list_pos+=1
+    def get_cursor_pos(self, ids_list):
+        cursor_list_pos = 0
+        if not self.last_id:  # no last_id? Then we are just beginning
+            return 0
+        # looking at which position in the list we are
+        while cursor_list_pos < len(ids_list)-1 and not self.last_id == ids_list[cursor_list_pos]:
+            cursor_list_pos += 1
         return cursor_list_pos
 
-    def show(self, content, title, cursormove=0):
+    def show(self, content, cursormove=0):
+        '''
+        This routine builds the screen - and when cursormove is <>0 , it moves the cursor up and down
+        '''
         if not content:
-            self.clear()
-            self.labels[0].value(title)
+            self.clear("")
             return
-        self.labels[0].value(title)
-        ids_list=sorted(list(content)) # makes a indexable list out of the content title keys
+        # makes a indexable list out of the content title keys
+        ids_list = sorted(list(content))
         if not self.last_id:  # this is the first call
-            self.last_id=ids_list[0]
-        cursor_list_pos=self.get_cursor_pos(ids_list)
+            pass # self.last_id = ids_list[0]
+        cursor_list_pos = self.get_cursor_pos(ids_list)
 
         if cursormove != 0:
-            new_cursor_list_pos=cursor_list_pos + cursormove
-            if new_cursor_list_pos>-1 and new_cursor_list_pos<len(ids_list):
-                cursor_list_pos=new_cursor_list_pos
-                self.last_id=ids_list[cursor_list_pos]
-                self.cursor_row_pos+=cursormove
-                self.cursor_row_pos=min(self.cursor_row_pos,self.nr_of_rows-1)
-                self.cursor_row_pos=max(self.cursor_row_pos,0)
-            elif new_cursor_list_pos<0: #jump to end if list
-                cursor_list_pos=len(ids_list)-1
-                self.last_id=ids_list[cursor_list_pos]
-                self.cursor_row_pos=self.nr_of_rows-1
-            else: #jump to beginning of list
-                cursor_list_pos=0
-                self.last_id=ids_list[cursor_list_pos]
-                self.cursor_row_pos=0
+            new_cursor_list_pos = cursor_list_pos + cursormove
+            if new_cursor_list_pos > -1 and new_cursor_list_pos < len(ids_list):
+                cursor_list_pos = new_cursor_list_pos
+                self.last_id = ids_list[cursor_list_pos]
+                self.cursor_row_pos += cursormove
+                self.cursor_row_pos = min(
+                    self.cursor_row_pos, self.nr_of_rows-1)
+                self.cursor_row_pos = max(self.cursor_row_pos, 0)
+            elif new_cursor_list_pos < 0:  # jump to end if list
+                cursor_list_pos = len(ids_list)-1
+                self.last_id = ids_list[cursor_list_pos]
+                self.cursor_row_pos = self.nr_of_rows-1
+            else:  # jump to beginning of list
+                cursor_list_pos = 0
+                self.last_id = ids_list[cursor_list_pos]
+                self.cursor_row_pos = 0
 
         '''
         now we can fill the display. Luckely a content list can only get longer from one loop to the next,
-        but it can never become shortee (found ids won't dissapear again). This saves us a lot of calculation
+        but it can never become shorter (found ids won't dissapear again). This saves us a lot of calculation
         for the display update
         '''
-        start_of_display_items=cursor_list_pos-self.cursor_row_pos
-        for ids_list_index in range(start_of_display_items,min(start_of_display_items + self.nr_of_rows,len(ids_list))):
-            label_index=ids_list_index- start_of_display_items+1
-            content_index=ids_list[ids_list_index]
-            format_telegram=content[content_index]
-            print("label_index-start_of_display_items",label_index-start_of_display_items,"self.cursor_row_pos",self.cursor_row_pos)
-            print("label_index:",label_index,"content_index",content_index,"text",format_telegram.text)
-            if label_index==self.cursor_row_pos + 1: # +1 is needed because label index starts at 1
-                self.labels[label_index].value(format_telegram.text,fgcolor=WHITE,bgcolor=RED)
+        label_index = 0
+        start_of_display_items = cursor_list_pos-self.cursor_row_pos
+        print("cursor_list_pos", cursor_list_pos,
+              "self.cursor_row_pos", self.cursor_row_pos)
+        print("start_of_display_items", start_of_display_items,
+              "self.nr_of_rows", self.nr_of_rows)
+        for ids_list_index in range(start_of_display_items, min(start_of_display_items + self.nr_of_rows, len(ids_list))):
+            label_index = ids_list_index - start_of_display_items+1
+            content_index = ids_list[ids_list_index]
+            format_telegram = content[content_index]
+            print("label_index-start_of_display_items", label_index -
+                  start_of_display_items, "self.cursor_row_pos", self.cursor_row_pos)
+            print("label_index:", label_index, "content_index",
+                  content_index, "text", format_telegram.text)
+            if label_index == self.cursor_row_pos + 1:  # +1 is needed because label index starts at 1
+                self.labels[label_index].value(
+                    format_telegram.text, fgcolor=WHITE, bgcolor=RED)
             else:
                 if format_telegram.new:
-                    self.labels[label_index].value(format_telegram.text,fgcolor=BLACK,bgcolor=GREEN)
-                    format_telegram.new=False
+                    self.labels[label_index].value(
+                        format_telegram.text, fgcolor=BLACK, bgcolor=GREEN)
+                    format_telegram.new = False
                 else:
-                    self.labels[label_index].value(format_telegram.text)
+                    self.labels[label_index].value(
+                        format_telegram.text, fgcolor=BLACK, bgcolor=WHITE)
 
-        print("ids_list_index",ids_list_index)
-        for clear_label in range(ids_list_index,self.nr_of_rows):
+        print("label_index", label_index,
+              "self.nr_of_rows", self.nr_of_rows)
+        for clear_label in range(label_index+1, self.nr_of_rows+1):
             self.labels[clear_label].value("")
-        print("cursor pos",cursor_list_pos, self.last_id)
-        for id  in ids_list:
+        print("cursor pos", cursor_list_pos, self.last_id)
+        for id in ids_list:
             print(id, content[id].text)
-        # 
+        #
         refresh(ssd)
 
     def show_splash(self):
-        self.clear()
-        self.labels[self.nr_of_rows/2].value('Scan for Buses')
+        self.clear("CANSpy")
+        self.labels[self.nr_of_rows//2].value('Scan for Buses')
         refresh(ssd)

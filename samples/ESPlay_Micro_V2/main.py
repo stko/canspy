@@ -90,11 +90,17 @@ while True:
         formatter.new_content(telegrams)
         if keypad[KeyPad.BTN_MENU].key_down:
             print("Button Menu")
+            if not formatter.module: # there is no module actual shown
+               formatter.module=disp.last_id # we assign the last selection from the display to the formater as to be displayed
+               disp.clear(formatter.module)
+            else:
+                formatter.module="" # jump back to the main screen
+                disp.clear("CANSpy auf {} kB".format(bus_speeds[speed_index]))
         if keypad[KeyPad.BTN_UP].key_down:
             print("Button up")
-            disp.show(formatter,"CANSpy auf {} kB".format(bus_speeds[speed_index]),1)
+            disp.show(formatter,1)
         else:
-            disp.show(formatter,"CANSpy auf {} kB".format(bus_speeds[speed_index]))
+            disp.show(formatter)
     '''if bus_valid:
         print("Bus {} kB ok".format(bus_speeds[speed_index]))
         for id, data in telegrams.items():
