@@ -1,5 +1,6 @@
 .venv
 inputs
 build
-kicad
 .vscode
+eagle
+*.FCStd1
