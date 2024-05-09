@@ -1,0 +1,10 @@
+CIRCUITPY_WIFI_SSID = "mywifi"
+CIRCUITPY_WIFI_PASSWORD = "mywifipassword"
+CIRCUITPY_WEB_API_PASSWORD = "myapipassword"
+CIRCUITPY_WEB_API_PORT = 80
+MQTT_SUB = "/canspy/%/config"
+MQTT_PUP= "/canspy/%/data"
+MQTT_HOST = "mymqtthost"
+MQTT_USER = ""
+MQTT_PASSWORD = ""
+
