@@ -3,6 +3,17 @@ from espcan import ESPCan
 from csmqtt import CSMQTT
 from pcbbuttons import KeyPad
 import csutils
+import json
+
+def on_topic(data):
+    global defaults
+    try:
+        data=json.loads(str(data))
+        if "modules" in data:
+            defaults["modules"]=data["modules"]
+    except Exception as ex:
+        print("JSON error", ex,data)
+
 status={
     "msgs":{}
 }
@@ -13,7 +24,7 @@ cpdui.draw()
 print("geht 3")
 can=ESPCan(0.9,10.0)
 print("geht 4")
-csmqtt=CSMQTT(None)
+csmqtt=CSMQTT(on_topic)
 print("geht 5")
 keypad=KeyPad(2)
 print("geht 6")

@@ -2,10 +2,10 @@
 espcan - autodetect the frame speed, listen for filtered messages and send telegrams
 
 '''
-
 import canio
 import time
 import board
+import binascii
 
 class ESPCan:
     def __init__(self, timeout: float, store_time: float, forced_baudrate: int = 0):
@@ -35,7 +35,6 @@ class ESPCan:
         self.bus_speeds = [125_000,250_000,500_000]
         self.speed_index=len(self.bus_speeds)-1
         self.timeout=timeout
-        self.timeout_ms=timeout*1000
         self.store_time=store_time
         self.can=None
         self.fixed_baudrate = (forced_baudrate >0)
@@ -59,9 +58,9 @@ class ESPCan:
         '''
         listen on the bus and fills the telegrams buffer with all last received msgs, one per id
         '''
-        print("scan")
-        start_time_ms=time.monotonic()
-        expired_time=start_time_ms -self.store_time
+        #print("scan")
+        start_time = time.monotonic()
+        expired_time = start_time -self.store_time
         # delete old messages first
         to_delete=[]
         for id, data in self.telegrams.items():
@@ -74,11 +73,11 @@ class ESPCan:
             if not message:
                 break
             recv_time=time.monotonic()
-            print(recv_time,self.timeout_ms,start_time_ms)
-            if recv_time-self.timeout_ms > start_time_ms:
+            #print(recv_time,self.timeout,start_time)
+            if recv_time-self.timeout > start_time:
                 break
-                # as we might miss some message, we store them for a while as a buffer 
-                self.telegrams[message.id]= {"t": recv_time, "msg":message.data}
+            # as we might miss some message, we store them for a while as a buffer 
+            self.telegrams[message.id]= {"t": recv_time, "msg":binascii.hexlify(message.data)}
             success=True
         return success
 
@@ -95,6 +94,7 @@ class ESPCan:
                 self.speed_index +=1
                 if self.speed_index>=len(self.bus_speeds):
                     self.speed_index=0
+                print("Try can speed", self.bus_speeds[self.speed_index])
                 self.open_can_device(self.bus_speeds[self.speed_index])
                 success=self.scan_bus()
                 if success:

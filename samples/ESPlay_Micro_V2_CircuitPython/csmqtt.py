@@ -77,7 +77,11 @@ class CSMQTT:
                 self.mqtt_client.loop(timeout=1)
             except Exception as ex:
                 print("MQTT Poll error",str(ex))
-                self.mqtt_client.reconnect()
+                try:
+                    print("Try to reconnect")
+                    self.mqtt_client.reconnect()
+                except Exception as ex:
+                    print("MQTT reconnect error",str(ex))
                 
 
     def send_topic(self,data):
@@ -89,7 +93,11 @@ class CSMQTT:
                 print("Sent!")
             except Exception as ex:
                 print("MQTT Send error",str(ex))
-                self.mqtt_client.reconnect()
+                try:
+                    print("Try to reconnect")
+                    self.mqtt_client.reconnect()
+                except Exception as ex:
+                    print("MQTT reconnect error",str(ex))
 
 
     # Define callback methods which are called when events occur
