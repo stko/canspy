@@ -1,0 +1,14 @@
+version: '3.6'
+
+services:
+  canspy_dashboard:
+    image: canspy_dashboard
+    build: .
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./canspy_dashboard-backup:/app/python/volumes/backup
+      - ./canspy_dashboard-runtime:/app/python/volumes/runtime
+    restart: always
+    network_mode: "host"
+    environment:
+      - TZ=Europe/Berlin

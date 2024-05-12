@@ -1,0 +1,121 @@
+<html>
+
+<head>
+  <title>Canspy Dashboard</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@1.5.20/dist/vuetify.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/babel-polyfill/dist/polyfill.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@1.5.20/dist/vuetify.min.js"></script>
+  <script src="websocket.js"></script>
+
+
+
+</head>
+
+<body>
+  <div id="app">
+    <!--
+    <v-app id="inspire">
+      -->
+    <v-treeview v-model="tree" :items="items" :opened="initiallyOpen" item-key="name" activatable open-on-click>
+      <template v-slot:prepend="{ item, open }">
+        <v-icon color="red" v-if="!item.file">
+          {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
+        </v-icon>
+        <v-icon v-else> {{ files[item.file] }} </v-icon>
+        {{item.title}}
+      </template>
+    </v-treeview>
+    <v-btn :click="click_me()">
+      Button
+    </v-btn>
+    </template>
+    <!--
+      </v-app>>
+    -->
+  </div>
+  <script>new Vue({
+      el: "#app",
+      //data: () => ({
+      data: function () {
+        return {
+          initiallyOpen: ['public'],
+          files: {
+            html: 'mdi-language-html5',
+            js: 'mdi-nodejs',
+            json: 'mdi-code-json',
+            md: 'mdi-language-markdown',
+            pdf: 'mdi-file-pdf-box',
+            png: 'mdi-file-image',
+            txt: 'mdi-file-document-outline',
+            xls: 'mdi-file-excel',
+          },
+          tree: [],
+          items: [
+            {
+              title: '.git',
+            },
+            {
+              title: 'node_modules',
+            },
+            {
+              title: 'public',
+              children: [
+                {
+                  title: 'static',
+                  children: [
+                    {
+                      title: 'logo.png',
+                      file: 'png',
+                    },
+                  ],
+                },
+                {
+                  title: 'favicon.ico',
+                  file: 'png',
+                },
+                {
+                  title: 'index.html',
+                  file: 'html',
+                },
+              ],
+            },
+            {
+              title: '.gitignore',
+              file: 'txt',
+            },
+            {
+              title: 'babel.config.js',
+              file: 'js',
+            },
+            {
+              title: 'package.json',
+              file: 'json',
+            },
+            {
+              title: 'README.md',
+              file: 'md',
+            },
+            {
+              title: 'vue.config.js',
+              file: 'js',
+            },
+            {
+              title: 'yarn.lock',
+              file: 'txt',
+            },
+          ],
+        }
+      },
+      methods: {
+        click_me: function () {
+            this.$set(this.items[0], 'title', "moin")
+        }
+    }    });
+  </script>
+</body>
+
+</html>
