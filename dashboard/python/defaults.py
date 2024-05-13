@@ -10,7 +10,7 @@ MSG_SOCKET_MSG = 'wsmsg'
 MSG_SOCKET_xxx = 'xxxx'
 
 # all the different query types
-QUERY_canspy_dashboard_LIST = 'canspy_dashboardlist'
+BROADCAST_canspy_dashboard_LIST = 'canspy_dashboardlist'
 
 # limits the number of search results when do a query
 MAX_QUERY_SIZE = 40
