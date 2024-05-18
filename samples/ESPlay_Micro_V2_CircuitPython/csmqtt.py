@@ -87,6 +87,8 @@ class CSMQTT:
     def send_topic(self,data):
             
             # Send a new message
+            if not data:
+                return # empty msgs can not be send..
             try:
                 print(f"Sending photocell value: {data}...")
                 self.mqtt_client.publish(self.mqtt_publish, json.dumps(data))

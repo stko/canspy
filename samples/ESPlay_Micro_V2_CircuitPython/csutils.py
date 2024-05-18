@@ -9,9 +9,9 @@ def load_defaults():
 
 def filter_telegrams(defaults,telegrams):
     result={}
-    for module,masks in defaults["modules"].items():
+    for module,settings in defaults["modules"].items():
         result[module]={"state":0}
-        for id,mask in masks.items():
+        for id,mask in settings["msgs"].items():
             id=int(id,16)
             mask=int(mask,16)
             for can_id in telegrams:
