@@ -18,3 +18,6 @@ def filter_telegrams(defaults,telegrams):
                 if can_id & mask == id:
                     result[module]["state"]=1
     return result
+
+def collect_sensors():
+    return {"batt":21.4, "temp":34.3, "gx":1.2,"gxmax":2.5}

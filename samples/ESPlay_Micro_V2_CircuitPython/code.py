@@ -5,6 +5,7 @@ from pcbbuttons import KeyPad
 import csutils
 import json
 import microcontroller
+import traceback
 
 def on_topic(data):
     global defaults
@@ -37,13 +38,14 @@ try:
         print("modules")
         for module,data in status["msgs"].items():
             print(module, data["state"])
-        csmqtt.send_topic(can.telegrams)
+        csmqtt.send_topic({"can": can.telegrams,"sensors":csutils.collect_sensors()})
         csmqtt.handle_mqtt()
         while keypad.refresh():
             for index, pin in keypad.items():
                 print(index,pin.pin, pin.key_up, pin.key_down)
 except Exception as ex:
-    print("reset because of ", str(ex))
+    print("reset because of ")
+    traceback.print_exception(ex)
     microcontroller.reset()
 
 

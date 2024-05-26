@@ -75,12 +75,12 @@ class CSMQTT:
             # Poll the message queue
             try:
                 self.mqtt_client.loop(timeout=1)
-            except Exception as ex:
+            except MQTT.MMQTTException as ex:
                 print("MQTT Poll error",str(ex))
                 try:
                     print("Try to reconnect")
                     self.mqtt_client.reconnect()
-                except Exception as ex:
+                except MQTT.MMQTTException as ex:
                     print("MQTT reconnect error",str(ex))
                 
 
@@ -93,12 +93,12 @@ class CSMQTT:
                 print(f"Sending photocell value: {data}...")
                 self.mqtt_client.publish(self.mqtt_publish, json.dumps(data))
                 print("Sent!")
-            except Exception as ex:
+            except AttributeError, MQTT.MMQTTException as ex:
                 print("MQTT Send error",str(ex))
                 try:
                     print("Try to reconnect")
                     self.mqtt_client.reconnect()
-                except Exception as ex:
+                except MQTT.MMQTTException as ex:
                     print("MQTT reconnect error",str(ex))
 
 

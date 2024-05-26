@@ -29,9 +29,6 @@
         {{item.title}}
       </template>
     </v-treeview>
-    <v-btn :click="click_me()">
-      Button
-    </v-btn>
 		<!--v-row justify="center"-->
 			<v-dialog dark v-model="offline_dialog_show" max-width="300px">
 				<!--<v-dialog  max-width="300px"> -->
@@ -62,6 +59,7 @@
           icons: {
             vehicle: 'mdi-fire-truck',
             location: 'mdi-map-marker',
+            module: "mdi-chip",
             gauge: 'mdi-gauge',
 
           },
@@ -132,9 +130,6 @@
         );
       },
       methods: {
-        click_me: function () {
-          //this.$set(this.items[0], 'title', "moin")
-        },
         messenger_onMessage(type, data) {
           console.log("incoming message to app", type, data);
           if (type == "app_canspy_dashboardlist") {
