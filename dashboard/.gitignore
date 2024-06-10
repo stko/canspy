@@ -1,0 +1,16 @@
+# python p-code 
+*.pyc
+# certificates
+*.pem
+# configs
+*.json
+# downloads
+*.gz
+# temp files
+*~
+node_modules
+/.project
+#whoosh index dirs
+indexdir
+# virtual environment
+.venv
