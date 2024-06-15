@@ -8,7 +8,39 @@ services:
       - /etc/localtime:/etc/localtime
       - ./canspy_dashboard-backup:/app/python/volumes/backup
       - ./canspy_dashboard-runtime:/app/python/volumes/runtime
+    depends_on:
+      - mqtt
     restart: always
     network_mode: "host"
+    environment:
+      - TZ=Europe/Berlin
+
+
+  nodered:
+    #image: ghcr.io/ct-open-source/ctnodered:latest
+    image: nodered/node-red
+
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./data/nodered:/data
+      - /etc/localtime:/etc/localtime
+    depends_on:
+      - mqtt
+    restart: always
+#    network_mode: "host"
+    environment:
+      - TZ=Europe/Berlin
+
+
+  mqtt:
+    image: "eclipse-mosquitto"
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./data/mqtt:/mosquitto
+      - /etc/localtime:/etc/localtime
+    restart: always
     environment:
       - TZ=Europe/Berlin
