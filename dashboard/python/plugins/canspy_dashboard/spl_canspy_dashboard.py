@@ -45,7 +45,7 @@ class SplPlugin(SplThread):
             "canspy_dashboard.json",
             {
                 "mqtt_topic": "/canspy/#",
-                "mqtt_host": "schnipsl",
+                "mqtt_host": "mqtt",
                 "mqtt_port": 1883,
                 "mqtt_qos": 1,
                 "broadcast_interval": 5,
@@ -65,6 +65,7 @@ class SplPlugin(SplThread):
                         "1": "{value_raw} V is ok",
                     }
                 },
+                "locations": ["Bremerhaven", "Tauberbischoffheim"],
                 "vehiclelines": {
                     "Defender": {
                         "modules": {
@@ -86,10 +87,6 @@ class SplPlugin(SplThread):
                                     {"id": "0x182", "mask": "0xFFF"},
                                 ]
                             },
-                            "A70": {"msgs": {"0x425": "0xFFF"}},
-                            "A99": {"msgs": {"0x406": "0xFFF"}},
-                            "Aerror": {"msgs": {"0x425": "0x000"}},
-                            "Axx": {"msgs": {"0x999": "0xFFF"}},
                         }
                     }
                 },

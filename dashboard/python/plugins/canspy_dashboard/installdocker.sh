@@ -12,4 +12,4 @@ cd $SCRIPT_DIR
 # sudo apt install -y ffmpeg
 # $SUDO apt-get install -y nodejs python3-xmltodict libyajl-dev curl
 # npm install dvbtee
-$SUDO pip3 install flask flask-sockets
+$SUDO pip3 install flask flask-sockets bitstring evalidate paho-mqtt

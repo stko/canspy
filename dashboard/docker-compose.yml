@@ -4,6 +4,8 @@ services:
   canspy_dashboard:
     image: canspy_dashboard
     build: .
+    ports:
+      - "8000:8000"
     volumes:
       - /etc/localtime:/etc/localtime
       - ./canspy_dashboard-backup:/app/python/volumes/backup
@@ -11,7 +13,7 @@ services:
     depends_on:
       - mqtt
     restart: always
-    network_mode: "host"
+    #network_mode: "host"
     environment:
       - TZ=Europe/Berlin
 
