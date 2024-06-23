@@ -25,7 +25,7 @@ ADD "https://cdn.jsdelivr.net/npm/vuetify@1.5.20/dist/vuetify.min.js" ./static/l
 
 
 #ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.eot?v=3.9.97" ./static/fonts/materialdesignicons-webfont.eot
-ADD "https://fonts.gstatic.com/s/materialicons/v142/flUhRq6tzZclQEJ-Vdg-IuiaDsNZ.ttf" /static/fonts/
+ADD "https://fonts.gstatic.com/s/materialicons/v142/flUhRq6tzZclQEJ-Vdg-IuiaDsNZ.ttf" ./static/fonts/
 ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.eot?#iefix&v=3.9.97" ./static/fonts/materialdesignicons-webfont.eot
 ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.woff2?v=3.9.97" ./static/fonts/materialdesignicons-webfont.woff2
 ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.woff?v=3.9.97" ./static/fonts/materialdesignicons-webfont.woff
