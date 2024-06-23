@@ -1,0 +1,13 @@
+wget https://fonts.gstatic.com/s/materialicons/v142/flUhRq6tzZclQEJ-Vdg-IuiaDsNZ.ttf
+wget https://fonts.gstatic.com/s/roboto/v30/KFOkCnqEu92Fr1MmgWxP.ttf
+wget https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmSU5vAw.ttf
+wget https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Me5Q.ttf
+wget https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmEU9vAw.ttf
+wget https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmWUlvAw.ttf
+wget https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmYUtvAw.ttf
+
+
+wget "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.eot?#iefix&v=3.9.97" -o materialdesignicons-webfont.eot
+wget "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.woff2?v=3.9.97" -o materialdesignicons-webfont.woff2
+wget "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.woff?v=3.9.97" -o materialdesignicons-webfont.woff
+wget "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.ttf?v=3.9.97" -o materialdesignicons-webfont.ttf

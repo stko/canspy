@@ -5,7 +5,7 @@ services:
     image: canspy_dashboard
     build: .
     ports:
-      - "8000:8000"
+      - "8000:80"
     volumes:
       - /etc/localtime:/etc/localtime
       - ./canspy_dashboard-backup:/app/python/volumes/backup

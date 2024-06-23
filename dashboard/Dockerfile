@@ -16,6 +16,20 @@ FROM python:3-buster
 
 WORKDIR /app
 COPY static ./static
+ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" ./static/libs/
+#ADD "https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" ./static/libs/
+ADD "https://cdn.jsdelivr.net/npm/vuetify@1.5.20/dist/vuetify.min.css" ./static/libs/
+ADD "https://cdn.jsdelivr.net/npm/babel-polyfill/dist/polyfill.min.js" ./static/libs/
+ADD "https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js" ./static/libs/
+ADD "https://cdn.jsdelivr.net/npm/vuetify@1.5.20/dist/vuetify.min.js" ./static/libs/
+
+
+#ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.eot?v=3.9.97" ./static/fonts/materialdesignicons-webfont.eot
+ADD "https://fonts.gstatic.com/s/materialicons/v142/flUhRq6tzZclQEJ-Vdg-IuiaDsNZ.ttf" /static/fonts/
+ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.eot?#iefix&v=3.9.97" ./static/fonts/materialdesignicons-webfont.eot
+ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.woff2?v=3.9.97" ./static/fonts/materialdesignicons-webfont.woff2
+ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.woff?v=3.9.97" ./static/fonts/materialdesignicons-webfont.woff
+ADD "https://cdn.jsdelivr.net/npm/@mdi/font@3.x/fonts/materialdesignicons-webfont.ttf?v=3.9.97" ./static/fonts/materialdesignicons-webfont.ttf
 COPY python ./python
 
 COPY --from=builder /app/python/*.pem ./python/
@@ -29,6 +43,6 @@ RUN bash -c "/tmp/installdockers.sh"
 
 WORKDIR /app/python
 
-CMD [ "python3", "./canspy_dashboard.py" , "-s" ]
+CMD [ "python3", "./canspy_dashboard.py"  ]
 
-EXPOSE 8000
+EXPOSE 80

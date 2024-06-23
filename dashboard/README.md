@@ -116,7 +116,7 @@ create some configs
         "server_config": {
             "credentials": "",
             "host": "0.0.0.0",
-            "openbrowser": true,
+            "openbrowser": false,
             "port": 8000,
             "secure": false
         }
@@ -130,3 +130,5 @@ the `docker compose build` command will build the container and run it interacti
 
 ## Reference
 The dashboard is made out of the [WAS- Template](https://github.com/stko/was)
+
+The CANSPY Font is (c) Typodermic Fonts(https://www.1001freefonts.com/nasalization.font)

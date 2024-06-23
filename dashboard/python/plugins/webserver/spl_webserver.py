@@ -60,9 +60,9 @@ class SplPlugin(SplThread):
 				'server_config': {
 					"credentials": "",
 					"host": "0.0.0.0",
-					"port": 8000,
+					"port": 80,
 					"secure": False,
-					"openbrowser" : True
+					"openbrowser" : False
 				},
 				'actual_settings': {
 					'www_root_dir': os.path.realpath(os.path.join(self.program_dir,'../../../static'))
@@ -211,15 +211,15 @@ class SplPlugin(SplThread):
 			self.server = pywsgi.WSGIServer(
 				(self.args.host, self.args.port), self.app, handler_class=WebSocketHandler)
 			## read the epa dir with the actual settings
-
 			if self.args.secure:
 				print('initialized secure https server at port %d' %
 					(self.args.port))
-				webbrowser.open(f'https://{self.extract_ip()}:{self.args.port}', new=2)
+				if self.args.browser:
+					webbrowser.open(f'https://{self.extract_ip()}:{self.args.port}', new=2)
 			else:
 				print('initialized http server at port %d' % (self.args.port))
-			if self.args.browser:
-				webbrowser.open(f'http://{self.extract_ip()}:{self.args.port}', new=2)
+				if self.args.browser:
+					webbrowser.open(f'http://{self.extract_ip()}:{self.args.port}', new=2)
 
 			self.server.serve_forever()
 

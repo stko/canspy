@@ -4,3 +4,7 @@ build
 .vscode
 eagle
 *.FCStd1
+dashboard/static/libs/*.js
+dashboard/static/libs/*.css
+dashboard/static/fonts/*.ttf
+dashboard/static/fonts/materialdesignicons*

@@ -3,12 +3,92 @@
 <head>
   <title>Canspy Dashboard</title>
 
+  <!--
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@3.x/css/materialdesignicons.min.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@1.5.20/dist/vuetify.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/babel-polyfill/dist/polyfill.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@1.5.20/dist/vuetify.min.js"></script>
+-->
+<!-- den Link
+
+<link rel="stylesheet" href="libs/css?family=Roboto:100,300,400,500,700,900|Material+Icons" />
+
+runtergeladen, hier als Style eingebunden und dann alle Fonts händisch runtergeladen...  -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+<style>
+  @font-face {
+      font-family: 'Material Icons';
+      font-style: normal;
+      font-weight: 400;
+      src: url(fonts/flUhRq6tzZclQEJ-Vdg-IuiaDsNZ.ttf) format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 100;
+      src: url(fonts/KFOkCnqEu92Fr1MmgWxP.ttf) format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 300;
+      src: url(fonts/KFOlCnqEu92Fr1MmSU5vAw.ttf) format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 400;
+      src: url(fonts/KFOmCnqEu92Fr1Me5Q.ttf) format('truetype');
+    }
+    
+    @font-face {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 500;
+      src: url(fonts/KFOlCnqEu92Fr1MmEU9vAw.ttf) format('truetype');
+    }
+
+    @font-face {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 700;
+      src: url(fonts/KFOlCnqEu92Fr1MmWUlvAw.ttf) format('truetype');
+    }
+    
+    @font-face {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 900;
+      src: url(fonts/KFOlCnqEu92Fr1MmYUtvAw.ttf) format('truetype');
+    }
+    
+    .material-icons {
+      font-family: 'Material Icons';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+    }
+    </style>
+<link rel="stylesheet" href="libs/materialdesignicons.min.css" />
+
+<link rel="stylesheet" href="libs/vuetify.min.css" />
+<script src="libs/polyfill.min.js"></script>
+<script src="libs/vue.js"></script>
+  <script src="libs/vuetify.min.js"></script>
   <script src="websocket.js"></script>
 
 
@@ -16,6 +96,7 @@
 </head>
 
 <body>
+  <h1> CANSpy Dashboard</h1>
   <div id="app">
     <!--
     <v-app id="inspire">
@@ -29,22 +110,19 @@
         {{item.title}}
       </template>
     </v-treeview>
-		<!--v-row justify="center"-->
-			<v-dialog dark v-model="offline_dialog_show" max-width="300px">
-				<!--<v-dialog  max-width="300px"> -->
-				<v-card>
-					<v-card-title>Server disconnected</v-card-title>
-					<v-divider></v-divider>
-					<v-card-text style="height: 75px">
-						<v-progress-circular
-							indeterminate
-							color="primary"
-						></v-progress-circular>
-					</v-card-text>
-				</v-card>
-			</v-dialog>
-		<!-- v-row -->
-  </template>
+    <!--v-row justify="center"-->
+    <v-dialog dark v-model="offline_dialog_show" max-width="300px">
+      <!--<v-dialog  max-width="300px"> -->
+      <v-card>
+        <v-card-title>Server disconnected</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text style="height: 75px">
+          <v-progress-circular indeterminate color="primary"></v-progress-circular>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <!-- v-row -->
+    </template>
     <!--
       </v-app>>
     -->
