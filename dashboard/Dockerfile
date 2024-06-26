@@ -10,9 +10,8 @@ RUN apt-get update && \
     -days 3650 -subj "/C=DE/ST=Brake/L=lower Saxony/O=stko/OU=IT Department/CN=koehlers.de" \
     -keyout python/key.pem -out python/server.pem
 
-
-#FROM python:3
-FROM python:3-buster
+# Use the official lightweight Python 3.11-slim image
+FROM python:3.11-slim
 
 WORKDIR /app
 COPY static ./static
