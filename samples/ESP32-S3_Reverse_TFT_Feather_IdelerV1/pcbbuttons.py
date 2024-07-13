@@ -38,8 +38,8 @@ class KeyHandle:
         '''
         returns true if any input change has found
         '''
+        any_change=False
         actual_state=self.get_pin()
-        any_change=self.pin != actual_state
         if not actual_state and self.debounce > 0:
             self.debounce -= 1
         if actual_state and self.debounce < 2 * debounce:
@@ -57,6 +57,7 @@ class KeyHandle:
         else:
             self.key_down=False
             self.key_up=False
+        self.old_value=debounced_state
         return any_change
             
 class PinKeyHandle(KeyHandle):
@@ -118,10 +119,10 @@ class KeyPad(dict):
         self[self.BTN_LEFT]=KeyHandle() # unused
 
         self[self.BTN_RIGHT]=KeyHandle() # unused
-        self[self.BTN_UP]=PCFKeyHandle(self.pcf.get_pin(0),True) # green
-        self[self.BTN_DOWN]=PCFKeyHandle(self.pcf.get_pin(1),True) # yellow
+        self[self.BTN_UP]=PCFKeyHandle(self.pcf.get_pin(1),True) # green
+        self[self.BTN_DOWN]=PCFKeyHandle(self.pcf.get_pin(3),True) # yellow
         self[self.BTN_SELECT]=PCFKeyHandle(self.pcf.get_pin(2),True) # red
-        self[self.BTN_MENU]=PCFKeyHandle(self.pcf.get_pin(3),True) # blue
+        self[self.BTN_MENU]=PCFKeyHandle(self.pcf.get_pin(0),True) # blue
         self[self.BTN_L]=KeyHandle() # unused
         self[self.BTN_R]=KeyHandle() # unused
 
@@ -136,7 +137,10 @@ class KeyPad(dict):
         '''
         any_change=False
         for id, key in self.items():
-            any_change = any_change or key.refresh(self.debounce)
+            this_change=key.refresh(self.debounce)
+            if this_change:
+                print("key change",id,this_change)
+            any_change = any_change or any_change
         return any_change
 
     def get_pin(self,pin_nr)-> board.DigitalInOut:
