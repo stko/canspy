@@ -7,6 +7,8 @@ import csutils
 import json
 import microcontroller
 import traceback
+from pyumenu import UIMenu
+
 
 ignition_pin=None
 
@@ -25,12 +27,13 @@ try:
     status={
         "msgs":{}
     }
-    cpdui=CPDUI()
-    cpdui.draw()
+    #pdui=CPDUI()
+    #cpdui.draw()
+    umenu=UIMenu("")
     can=ESPCan(0.9,10.0)
     csmqtt=CSMQTT(on_topic)
     keypad=KeyPad(1)
-    lightstrip=LightStrip()
+    lightstrip=LightStrip(9)
     ignition_pin=keypad.get_pin(5)
     ignition_pin.switch_to_output(value=False)
     defaults=csutils.load_defaults()

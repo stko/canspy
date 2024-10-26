@@ -51,10 +51,10 @@ class CPDUI:
 
         display_bus = FourWire(spi, command=tft_dc, chip_select=tft_cs, reset=tft_reset)
         
-        self.display = DISPLAY(display_bus, width=240, height=135, rotation=0)
+        self.display = DISPLAY( display_bus, rotation=270, width=240, height=135, rowstart=40, colstart=53)
         
         # in case the board has a display
-        # self.display = board.DISPLAY
+        #self.display = board.DISPLAY
         
         # Make the display context
         
