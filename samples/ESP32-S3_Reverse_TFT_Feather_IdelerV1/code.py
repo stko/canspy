@@ -7,7 +7,7 @@ import csutils
 import json
 import microcontroller
 import traceback
-from pyumenu import UIMenu
+from pyumenu import UIMenu, Menu, Item
 
 
 ignition_pin=None
@@ -23,13 +23,59 @@ def on_topic(data):
             ignition_pin.value=data["ignition"]
     except Exception as ex:
         print("JSON error", ex,data)
+
+uimenu = UIMenu(width=240, height=135,font_size=20)
+     
+def submenu(row, data=None):
+    menu = Menu()
+    menu.add_item(Item("submenu", ""))
+    menu.add_item(Item("subitem", "1"))
+    menu.add_item(Item("another", "2"))
+    uimenu.add(menu)
+
+
+def slider(item, direction, data):
+    if direction == "up":
+        data[0] += 10
+    else:
+        data[0] -= 10
+    data[0] = item.set_percentage(data[0], str(data[0])+ " %")
+
+   
 try:
     status={
         "msgs":{}
     }
     #pdui=CPDUI()
     #cpdui.draw()
-    umenu=UIMenu("")
+
+    slider_value = [0]
+    menu = Menu()
+    menu.add_item(Item("Simulation", ""))
+    menu.add_item(Item("Temperatur", "27°"))
+    menu.add_item(Item("Pressure", "3.4 bar"))
+    menu.add_item(Item("Submenu", "-", callback=submenu))
+    menu.add_item(Item("Torque", "34 Nm"))
+    menu.add_item(Item("Level", "12"))
+    menu.add_item(Item("Speed", "17 km/h"))
+    menu.add_item(Item("Weight", "88 kg"))
+    menu.add_item(Item("Brightness", "70%"))
+
+    percentage_control = Item("Percentage", 0)
+    # make an item with to a percentage bar by set an percentage
+    percentage_control.set_percentage(10, "10 %")
+    menu.add_item(percentage_control)
+
+    # make an item with to a percentage bar by set an percentage
+    # and add a callback, which makes it a slider
+    slider_control = Item("slider", slider_value[0], callback=slider, data=slider_value)
+    slider_control.set_percentage(0)
+    menu.add_item(slider_control)
+
+    uimenu.add(menu)
+
+
+ 
     can=ESPCan(0.9,10.0)
     csmqtt=CSMQTT(on_topic)
     keypad=KeyPad(1)

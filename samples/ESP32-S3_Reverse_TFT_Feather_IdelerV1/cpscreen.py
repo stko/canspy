@@ -5,6 +5,7 @@ circuitpython class for all screen related primitives in displayio
 import time
 import adafruit_display_text
 from adafruit_display_text import bitmap_label
+from adafruit_bitmap_font import bitmap_font
 import board
 import os
 import displayio
@@ -70,6 +71,7 @@ class Screen(AScreen):
         select=None,
         eval_mouse_move=None,
         font_size=FONT_SIZE,
+        font_file = "fonts/LeagueSpartan-Bold-16.bdf"
     ):
         
 
@@ -82,19 +84,19 @@ class Screen(AScreen):
         # displayio uses a color palette, so we've to assign our colors to a palette_
 
         self.palette = displayio.Palette(13)
-        self.palette[self.BACKGROUND] = 0xcdb5cd # "thistle3"
-        self.palette[self.TITLE_BG] = 0x600909 # "cornflower blue"
-        self.palette[self.TITLE_PERCENT] = 0x0000ee # "blue2"
-        self.palette[self.TITLE_COLOR] = 0xffffff # "white"
-        self.palette[self.TEXT_BG] = 0x76ee # "chartreuse2"
-        self.palette[self.TEXT_PERCENT] = 0xffd700 # "gold"
-        self.palette[self.TEXT_COLOR] = 0x000000 # "black"
-        self.palette[self.VALUE_COLOR] = 0x0000ff # "blue"
-        self.palette[self.MARKER_BACK] = 0x0000ee # "blue2"
-        self.palette[self.MARKER_SELECT] = 0xee0000 # "red2"
-        self.palette[self.MARKER_UP] = 0x00cd00 # "green3"
-        self.palette[self.MARKER_DOWN] = 0xeeee00 # "yellow2"
-        self.palette[self.MARKER_INACTIVE] = 0x030303 # "grey"]
+        self.palette[self.BACKGROUND] = displayio.ColorConverter().convert(0xcdb5cd) # "thistle3"
+        self.palette[self.TITLE_BG] = displayio.ColorConverter().convert(0x600909) # "cornflower blue"
+        self.palette[self.TITLE_PERCENT] = displayio.ColorConverter().convert(0x0000ee) # "blue2"
+        self.palette[self.TITLE_COLOR] = displayio.ColorConverter().convert(0xffffff) # "white"
+        self.palette[self.TEXT_BG] = displayio.ColorConverter().convert(0x76ee) # "chartreuse2"
+        self.palette[self.TEXT_PERCENT] = displayio.ColorConverter().convert(0xffd700) # "gold"
+        self.palette[self.TEXT_COLOR] = displayio.ColorConverter().convert(0x000000) # "black"
+        self.palette[self.VALUE_COLOR] = displayio.ColorConverter().convert(0x0000ff) # "blue"
+        self.palette[self.MARKER_BACK] = displayio.ColorConverter().convert(0x0000ee) # "blue2"
+        self.palette[self.MARKER_SELECT] = displayio.ColorConverter().convert(0xee0000) # "red2"
+        self.palette[self.MARKER_UP] = displayio.ColorConverter().convert(0x00cd00) # "green3"
+        self.palette[self.MARKER_DOWN] = displayio.ColorConverter().convert(0xeeee00) # "yellow2"
+        self.palette[self.MARKER_INACTIVE] = displayio.ColorConverter().convert(0x030303) # "grey"]
         
         # uncomment the next block in case the board has a predefined display
         """
@@ -130,10 +132,11 @@ class Screen(AScreen):
         """
         # in case the board has a display
         self.display = board.DISPLAY
-        
-        self.font = terminalio.FONT
+        self.display.auto_refresh = False
+        self.font =  bitmap_font.load_font(font_file)
         self.font_size = font_size
         self.font_height = font_size
+        self.descent=0
         # Make the display context
         
         main_group = displayio.Group()
@@ -152,6 +155,7 @@ class Screen(AScreen):
         self.display.root_group = main_group
         bitmaptools.fill_region(self.bitmap,10,10,100,100,5)
         text_bitmap=bitmap_label.Label(font=self.font,text="bla",color=0xffffff,save_text=False)
+        bitmaptools.blit(self.bitmap,text_bitmap.bitmap,10,10)
         #self.display.root_group=text_bitmap
         print(self.bitmap.width)
         print(self.bitmap.height)
@@ -159,7 +163,6 @@ class Screen(AScreen):
         print(text_bitmap.height)
         print(text_bitmap.width)
         print(text_bitmap.bitmap.bits_per_value)
-        bitmaptools.blit(self.bitmap,text_bitmap.bitmap,10,10)
         print("end of Display init")
 
 
@@ -217,30 +220,36 @@ class Screen(AScreen):
 
     # graphic primitives for rectangles and text
     def draw_rectangle(self, x1: int, y1: int, x2: int, y2: int, color):
-        self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, width=0)
+        x1, x2 = self.lower_first(x1,x2)
+        y1, y2 = self.lower_first(y1,y2)
+
+        print("rect", x1, y1, x2, y2, color,)
+        bitmaptools.fill_region(self.bitmap,x1, y1, x2, y2, color)
+        #self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, width=0)
 
     def draw_text(
         self,
         text: str,
         x,
         y,
-        color: str,
+        color: int,
         font_name: str,
         font_size: int,
         font_weight: str,
         orientation="sw",
     ):
-        self.canvas.create_text(
-            x,
-            y,
-            text=text,
-            fill=color,
-            font=(f"{font_name} {font_size} {font_weight}"),
-            anchor=orientation,
-        )
+
+        text_bitmap=bitmap_label.Label(font=self.font,text=text,color=self.palette[color],save_text=False,background_color=None)
+        print("text",x,y, color, hex(self.palette[color]), text)
+        if text_bitmap.bitmap:
+            if orientation=="sw":
+                bitmaptools.blit(self.bitmap,text_bitmap.bitmap,x,y-text_bitmap.bitmap.height)
+            else:
+                bitmaptools.blit(self.bitmap,text_bitmap.bitmap,x-text_bitmap.bitmap.width,y-text_bitmap.bitmap.height)
+
 
     def refresh(self):
-        self.window.update()
+        self.display.refresh()
 
     def text(self, row: int, title: str, value: str, percent: int = 0, refresh=False):
         if row > self.nr_of_rows:
