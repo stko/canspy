@@ -2,6 +2,7 @@
 import adafruit_pcf8574
 import board
 import digitalio
+import time
 
 class KeyHandle:
     '''
@@ -9,7 +10,7 @@ class KeyHandle:
     '''
     def __init__(self, inverted=False):
         self.is_inverted= inverted
-        self.pin = self.get_pin()
+        self._pin = self.get_pin()
         
         self.old_value = False
         self.is_pressed = False  # the only static value: its True if the key is actual pressed
@@ -19,6 +20,7 @@ class KeyHandle:
         self.key_down = False
         self.key_up = False  # an event flag: its True in the moment where the key was just released
         self.debounce = 0
+        self.last_key_event_time=0
 
 
     def get_pin(self) -> bool:
@@ -33,6 +35,11 @@ class KeyHandle:
         '''
 
         return False # we won't need this for PCF8574
+
+    @property
+    def pin(self):
+        return self.get_pin()
+
 
     def refresh(self, debounce) -> bool:
         '''
@@ -82,7 +89,8 @@ class PCFKeyHandle(KeyHandle):
         self.board_pin=pcf__pin
         self.board_pin.switch_to_input(digitalio.Pull.UP)
         super().__init__(inverted)
-        self.pin = self.get_pin()
+        self._pin = self.get_pin()
+        self.last_key_event_time=0
 
 
     def get_pin(self):
@@ -91,6 +99,9 @@ class PCFKeyHandle(KeyHandle):
         '''
         return self.board_pin.value == 1 ^ self.is_inverted
 
+    @property
+    def pin(self):
+        return self.get_pin()
 
 
 
@@ -104,7 +115,7 @@ class KeyPad(dict):
     BTN_L=const(6)
     BTN_R=const(7)
 
-    def __init__(self, debounce):
+    def __init__(self, debounce, inverted=False):
         super().__init__()
         # To use default I2C bus (most boards)
         i2c = board.I2C()  # uses board.SCL and board.SDA
@@ -115,33 +126,36 @@ class KeyPad(dict):
 
         self.pcf = adafruit_pcf8574.PCF8574(i2c)
         self.debounce=debounce
+        self.last_key_event_time=0
         # create instances for all inputs
         self[self.BTN_LEFT]=KeyHandle() # unused
 
         self[self.BTN_RIGHT]=KeyHandle() # unused
-        self[self.BTN_UP]=PCFKeyHandle(self.pcf.get_pin(1),True) # green
-        self[self.BTN_DOWN]=PCFKeyHandle(self.pcf.get_pin(3),True) # yellow
-        self[self.BTN_SELECT]=PCFKeyHandle(self.pcf.get_pin(2),True) # red
-        self[self.BTN_MENU]=PCFKeyHandle(self.pcf.get_pin(0),True) # blue
+        self[self.BTN_UP]=PCFKeyHandle(self.pcf.get_pin(1),inverted) # green
+        self[self.BTN_DOWN]=PCFKeyHandle(self.pcf.get_pin(3),inverted) # yellow
+        self[self.BTN_SELECT]=PCFKeyHandle(self.pcf.get_pin(2),inverted) # red
+        self[self.BTN_MENU]=PCFKeyHandle(self.pcf.get_pin(0),inverted) # blue
         self[self.BTN_L]=KeyHandle() # unused
         self[self.BTN_R]=KeyHandle() # unused
 
     
-    def refresh(self) -> bool:
+    def refresh(self,wait_time:float) -> bool:
         '''
         refreshes the state of all keys
 
         this is done here at a single place to have a common debounce behaviour for all keys
 
-        returns True if any input change has been detected        
+        returns True if any input change has been detected  or if last key pressed is within the debouce time
         '''
         any_change=False
+        this_time=time.monotonic()
         for id, key in self.items():
             this_change=key.refresh(self.debounce)
             if this_change:
                 print("key change",id,this_change)
-            any_change = any_change or any_change
-        return any_change
+                self.last_key_event_time=this_time
+                any_change = True
+        return any_change or self.last_key_event_time + wait_time> this_time
 
     def get_pin(self,pin_nr)-> board.DigitalInOut:
         return self.pcf.get_pin(pin_nr)

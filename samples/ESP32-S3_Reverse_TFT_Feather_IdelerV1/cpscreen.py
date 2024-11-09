@@ -84,19 +84,19 @@ class Screen(AScreen):
         # displayio uses a color palette, so we've to assign our colors to a palette_
 
         self.palette = displayio.Palette(13)
-        self.palette[self.BACKGROUND] = displayio.ColorConverter().convert(0xcdb5cd) # "thistle3"
-        self.palette[self.TITLE_BG] = displayio.ColorConverter().convert(0x600909) # "cornflower blue"
-        self.palette[self.TITLE_PERCENT] = displayio.ColorConverter().convert(0x0000ee) # "blue2"
-        self.palette[self.TITLE_COLOR] = displayio.ColorConverter().convert(0xffffff) # "white"
-        self.palette[self.TEXT_BG] = displayio.ColorConverter().convert(0x76ee) # "chartreuse2"
-        self.palette[self.TEXT_PERCENT] = displayio.ColorConverter().convert(0xffd700) # "gold"
-        self.palette[self.TEXT_COLOR] = displayio.ColorConverter().convert(0x000000) # "black"
-        self.palette[self.VALUE_COLOR] = displayio.ColorConverter().convert(0x0000ff) # "blue"
-        self.palette[self.MARKER_BACK] = displayio.ColorConverter().convert(0x0000ee) # "blue2"
-        self.palette[self.MARKER_SELECT] = displayio.ColorConverter().convert(0xee0000) # "red2"
-        self.palette[self.MARKER_UP] = displayio.ColorConverter().convert(0x00cd00) # "green3"
-        self.palette[self.MARKER_DOWN] = displayio.ColorConverter().convert(0xeeee00) # "yellow2"
-        self.palette[self.MARKER_INACTIVE] = displayio.ColorConverter().convert(0x030303) # "grey"]
+        self.palette[self.BACKGROUND] = 0xcdb5cd # "thistle3"
+        self.palette[self.TITLE_BG] = 0x600909 # "cornflower blue"
+        self.palette[self.TITLE_PERCENT] = 0x0000ee # "blue2"
+        self.palette[self.TITLE_COLOR] = 0xffffff # "white"
+        self.palette[self.TEXT_BG] = 0x76ee # "chartreuse2"
+        self.palette[self.TEXT_PERCENT] = 0xffd700 # "gold"
+        self.palette[self.TEXT_COLOR] = 0x000000 # "black"
+        self.palette[self.VALUE_COLOR] = 0x0000ff # "blue"
+        self.palette[self.MARKER_BACK] = 0x0000ee # "blue2"
+        self.palette[self.MARKER_SELECT] = 0xee0000 # "red2"
+        self.palette[self.MARKER_UP] = 0x00cd00 # "green3"
+        self.palette[self.MARKER_DOWN] = 0xeeee00 # "yellow2"
+        self.palette[self.MARKER_INACTIVE] = 0x030303 # "grey"]
         
         # uncomment the next block in case the board has a predefined display
         """
@@ -134,8 +134,11 @@ class Screen(AScreen):
         self.display = board.DISPLAY
         self.display.auto_refresh = False
         self.font =  bitmap_font.load_font(font_file)
+        font_width, font_height, font_x_offset, font_y_offset = self.font.get_bounding_box()
         self.font_size = font_size
-        self.font_height = font_size
+        ## wierd workaround to get a usable font size..?!?
+        text_bitmap=bitmap_label.Label(font=self.font,text="yM",color=self.palette[0],save_text=False,background_color=None)
+        self.font_height = text_bitmap.height
         self.descent=0
         # Make the display context
         
@@ -238,7 +241,7 @@ class Screen(AScreen):
         font_weight: str,
         orientation="sw",
     ):
-
+        text=str(text)
         text_bitmap=bitmap_label.Label(font=self.font,text=text,color=self.palette[color],save_text=False,background_color=None)
         print("text",x,y, color, hex(self.palette[color]), text)
         if text_bitmap.bitmap:

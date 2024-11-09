@@ -1,7 +1,7 @@
 import board
 import analogio
 from adafruit_onewire.bus import OneWireBus
-
+import adafruit_ds18x20
 class Analogs:
     def __init__(self) -> None:
         self._battery=analogio.AnalogIn(board.A2)
@@ -27,6 +27,10 @@ class Analogs:
             for byte in d.serial_number:
                 print("0x{:02x} ".format(byte), end="")
             print("\n\tFamily = 0x{:02x}".format(d.family_code))
+        self.ds18b20 = None
+        if self.devices:
+            self.ds18b20 = adafruit_ds18x20.DS18X20(self.ow_bus, self.devices[0])
+            print('Temperature: {0:0.3f} °C'.format(self.ds18b20.temperature))
 
     def battery(self):
         return self._battery.value
@@ -38,5 +42,10 @@ class Analogs:
         return self._ignition.value
     
     def current(self):
-        return self._current.value
+        return self._current.value    
+
+    def temperature(self):
+        if self.ds18b20:
+            return self.ds18b20.temperature
+        return 0.0
     

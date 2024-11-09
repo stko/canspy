@@ -93,10 +93,19 @@ try:
             print(module, data["state"])
         csmqtt.send_topic({"can": can.telegrams,"sensors":csutils.collect_sensors()})
         csmqtt.handle_mqtt()
-        #keypad.refresh() 
-        while keypad.refresh():
+        while keypad.refresh(0.5):
             for index, pin in keypad.items():
-                print(index,pin.pin, pin.key_up, pin.key_down)
+                if pin.key_down:
+                    print(index,pin.pin, pin.key_up, pin.key_down)
+                    if index==keypad.BTN_MENU: # left
+                        uimenu.back()
+                    elif index == keypad.BTN_SELECT: # right
+                        uimenu.select()
+                    elif index== keypad.BTN_UP: # up
+                        uimenu.move_cursor(-1)
+                    elif index==keypad.BTN_DOWN: #down
+                        uimenu.move_cursor(1)
+
 except Exception as ex:
     print("reset because of ")
     traceback.print_exception(ex)
