@@ -43,3 +43,24 @@ adafruit_minimqtt==7.6.3
 
 
 
+## Connector Pinouts
+
+CAN Bus M12 Female Typ A
+
+| Pin | Signal |
+| :-: | :----: |
+|  1  |  +BAT  |
+|  2  | CAN H  |
+|  3  |  GND   |
+|  4  | CAN L  |
+|  5  |  IGN   |
+
+
+Sensor Signals M12 Female Typ D
+
+| Pin | Signal |
+| :-: | :----: |
+|  1  |  +5V   |
+|  2  | 1-wire |
+|  3  |  GND   |
+|  4  |  ADC   |
