@@ -23,8 +23,12 @@ CANSpy is using the nano-gui micropython graphics library, which is available fo
 
 Get a copy of the latest driver
 
-    git clone --depth=1 https://github.com/peterhinch/micropython-nano-gui
+    git clone  https://github.com/peterhinch/micropython-nano-gui
     
+then, to be compatible with our firmware, go back to an older version
+
+   git reset --hard e90ed9de53a0d033b8322fa8114a086b80426746
+
 
 Delete all unused files and dirs, keep just the driver and the gui directory
 
